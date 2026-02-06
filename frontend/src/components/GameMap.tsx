@@ -2,31 +2,19 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { DAYS } from '../data/days';
 import { DayCard } from './DayCard';
-import { IntroModal } from './IntroModal';
+// IntroModal removed from this view — per-day pages handle intros
 import { ProgressBar } from './ProgressBar';
 import { SettingsModal } from './SettingsModal';
-import { GameContainer } from './GameContainer';
+// GameContainer is used on the per-day `DayView` page
 import type { Day } from '../types';
 
 export const GameMap: React.FC = () => {
-  const [selectedDay, setSelectedDay] = useState<Day | null>(null);
-  const [showIntro, setShowIntro] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [gameActive, setGameActive] = useState(false);
 
   const handleDayClick = (day: Day) => {
-    setSelectedDay(day);
-    setShowIntro(true);
-  };
-
-  const handleStartGame = () => {
-    setShowIntro(false);
-    setGameActive(true);
-  };
-
-  const handleCloseGame = () => {
-    setGameActive(false);
-    setSelectedDay(null);
+    // Navigate to the day page
+    window.history.pushState({}, '', `/day/${day.id}`);
+    window.dispatchEvent(new Event('pushstate'));
   };
 
   return (
@@ -91,27 +79,9 @@ export const GameMap: React.FC = () => {
         </motion.div>
       </div>
 
-      {/* Modals */}
-      {selectedDay && showIntro && (
-        <IntroModal
-          day={selectedDay}
-          onStart={handleStartGame}
-          onClose={() => {
-            setShowIntro(false);
-            setSelectedDay(null);
-          }}
-        />
-      )}
-
+      {/* Settings modal */}
       {showSettings && (
         <SettingsModal onClose={() => setShowSettings(false)} />
-      )}
-
-      {gameActive && selectedDay && (
-        <GameContainer
-          day={selectedDay}
-          onClose={handleCloseGame}
-        />
       )}
     </motion.div>
   );

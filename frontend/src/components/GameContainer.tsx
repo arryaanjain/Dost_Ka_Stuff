@@ -50,20 +50,27 @@ export const GameContainer: React.FC<GameContainerProps> = ({ day, onClose }) =>
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-40 overflow-auto"
+      className="min-h-screen p-6 md:p-10"
       style={{ backgroundColor: day.themeColor + '08' }}
     >
-      <button
-        onClick={onClose}
-        className="fixed top-6 right-6 z-50 text-4xl hover:scale-125 transition-transform bg-white rounded-full w-14 h-14 flex items-center justify-center shadow-xl border-2 border-gray-200"
-        title="Close game"
-      >
-        ✕
-      </button>
+      <div className="max-w-4xl mx-auto bg-white/80 rounded-2xl shadow-lg p-6">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-3xl font-extrabold" style={{ color: day.themeColor }}>
+            {day.title}
+          </h2>
+          <button
+            onClick={onClose}
+            className="text-2xl hover:scale-110 transition-transform bg-white rounded-full w-12 h-12 flex items-center justify-center shadow border"
+            title="Back to map"
+          >
+            ←
+          </button>
+        </div>
 
-      {renderGame()}
+        <div className="mt-4">{renderGame()}</div>
 
-      {isCompleted && <RewardModal day={day} onClose={onClose} />}
+        {isCompleted && <RewardModal day={day} onClose={onClose} />}
+      </div>
     </motion.div>
   );
 };
