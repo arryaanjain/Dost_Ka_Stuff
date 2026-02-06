@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
+import { getTimeLockEnabled, setTimeLockEnabled } from '../utils/storage';
 
 interface SettingsModalProps {
   onClose: () => void;
 }
 
 export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose }) => {
+  const [timeLock, setTimeLock] = useState<boolean>(true);
+
+  useEffect(() => {
+    setTimeLock(getTimeLockEnabled());
+  }, []);
+
+  const toggleTimeLock = () => {
+    const next = !timeLock;
+    setTimeLock(next);
+    setTimeLockEnabled(next);
+  };
   const handleReset = () => {
     if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
       localStorage.removeItem('valentine_game_state');
@@ -27,6 +39,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ onClose }) => {
         <h2 className="text-3xl font-bold mb-6">⚙️ Settings</h2>
 
         <div className="space-y-4 mb-8">
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <h3 className="font-bold text-gray-700 mb-2">Time Mode</h3>
+            <p className="text-sm text-gray-600 mb-3">When enabled, levels unlock only on their scheduled day. When disabled, all levels remain unlocked for immediate play.</p>
+            <div className="flex items-center gap-4">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" checked={timeLock} onChange={toggleTimeLock} />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:bg-pink-500 peer-checked:after:translate-x-5 after:content-[''] after:inline-block after:w-5 after:h-5 after:bg-white after:rounded-full after:transition-all" />
+              </label>
+              <span className="font-semibold">{timeLock ? 'Enabled (Locked)' : 'Disabled (Unlocked)'}</span>
+            </div>
+          </div>
           <div className="p-4 bg-gray-50 rounded-lg">
             <h3 className="font-bold text-gray-700 mb-2">About</h3>
             <p className="text-sm text-gray-600">

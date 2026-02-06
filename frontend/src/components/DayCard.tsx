@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import type { Day } from '../types';
-import { isDayCompleted } from '../utils/storage';
+import { isDayCompleted, isDayUnlocked, getTimeLockEnabled } from '../utils/storage';
 
 interface DayCardProps {
   day: Day;
@@ -9,8 +9,8 @@ interface DayCardProps {
 }
 
 export const DayCard: React.FC<DayCardProps> = ({ day, onClick }) => {
-  // Disable unlock feature - all days are accessible
-  const isUnlocked = true;
+  const timeLock = getTimeLockEnabled();
+  const isUnlocked = !timeLock || isDayCompleted(day.id) || isDayUnlocked(day.unlockDate);
   const isCompleted = isDayCompleted(day.id);
 
   return (
