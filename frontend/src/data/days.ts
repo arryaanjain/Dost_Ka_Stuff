@@ -1,0 +1,77 @@
+import type { Day } from '../types';
+
+// Get current year for dynamic dates
+const currentYear = new Date().getFullYear();
+
+export const DAYS: Day[] = [
+  {
+    id: 'rose',
+    number: 1,
+    title: '🌹 Rose Day',
+    theme: 'Pick the Perfect Rose',
+    themeColor: '#FFB6C1',
+    unlockDate: `${currentYear}-02-07`,
+    description: 'Every rose has a story. Find her favorite color.',
+    rewardMessage: 'Every rose reminds me of you—soft, strong, and impossible to ignore.',
+  },
+  {
+    id: 'propose',
+    number: 2,
+    title: '💍 Propose Day',
+    theme: 'Will You Say YES?',
+    themeColor: '#FF0000',
+    unlockDate: `${currentYear}-02-08`,
+    description: 'A simple question with a big answer.',
+    rewardMessage: 'If I had to ask you every day, I\'d still choose you every time.',
+  },
+  {
+    id: 'chocolate',
+    number: 3,
+    title: '🍫 Chocolate Day',
+    theme: 'Catch the Chocolates',
+    themeColor: '#8B4513',
+    unlockDate: `${currentYear}-02-09`,
+    description: 'Sweet moments are fleeting. Grab them.',
+    rewardMessage: 'Life\'s sweeter with you—chocolate just comes second.',
+  },
+  {
+    id: 'teddy',
+    number: 4,
+    title: '🧸 Teddy Day',
+    theme: 'Memory Flip – Teddy Edition',
+    themeColor: '#D2B48C',
+    unlockDate: `${currentYear}-02-10`,
+    description: 'Match memories, match hearts.',
+    rewardMessage: 'Some hugs stay with you long after you let go.',
+  },
+  {
+    id: 'promise',
+    number: 5,
+    title: '🤝 Promise Day',
+    theme: 'The Promise Slider',
+    themeColor: '#B19CD9',
+    unlockDate: `${currentYear}-02-11`,
+    description: 'Make a promise that lasts forever.',
+    rewardMessage: 'Promises are easy to make. I\'m here to keep mine.',
+  },
+  {
+    id: 'kiss',
+    number: 6,
+    title: '💋 Kiss Day',
+    theme: 'Catch the Kiss',
+    themeColor: '#FF1493',
+    unlockDate: `${currentYear}-02-12`,
+    description: 'A little flirting never hurt anyone.',
+    rewardMessage: 'This is just a small preview 😉',
+  },
+  {
+    id: 'valentine',
+    number: 7,
+    title: '❤️ Valentine Day',
+    theme: 'The Memory Matrix',
+    themeColor: '#DC143C',
+    unlockDate: `${currentYear}-02-13`,
+    description: 'The final level. The ultimate memory game.',
+    rewardMessage: 'Out of every path, every choice, every version of life—I\'d still find you.',
+  },
+];

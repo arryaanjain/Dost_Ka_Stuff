@@ -1,35 +1,26 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
 import './App.css'
+import { GameMap } from './components/GameMap'
+import DayView from './components/DayView'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [path, setPath] = useState(window.location.pathname);
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+  useEffect(() => {
+    const onPop = () => setPath(window.location.pathname);
+    window.addEventListener('popstate', onPop);
+    window.addEventListener('pushstate', onPop as EventListener);
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      window.removeEventListener('pushstate', onPop as EventListener);
+    };
+  }, []);
+
+  if (path.startsWith('/day/')) {
+    return <DayView />;
+  }
+
+  return <GameMap />;
 }
 
 export default App
