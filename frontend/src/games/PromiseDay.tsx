@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
 
 interface PromiseDayProps {
@@ -29,7 +29,7 @@ export const PromiseDay: React.FC<PromiseDayProps> = ({ onComplete }) => {
     <div className="flex flex-col items-center justify-start gap-8 p-8 min-h-screen bg-gradient-to-b from-purple-50 to-pink-50 overflow-y-auto">
       {showConfetti && <Confetti recycle={false} numberOfPieces={500} />}
 
-      <motion.div 
+      <motion.div
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="text-center"
@@ -39,7 +39,7 @@ export const PromiseDay: React.FC<PromiseDayProps> = ({ onComplete }) => {
       </motion.div>
 
       {!isLocked ? (
-        <motion.div 
+        <motion.div
           className="w-full max-w-2xl flex flex-col gap-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -50,7 +50,7 @@ export const PromiseDay: React.FC<PromiseDayProps> = ({ onComplete }) => {
             </h3>
             <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
               {promises.map((promise, index) => (
-                <motion.div 
+                <motion.div
                   key={index}
                   className="flex items-center gap-3 bg-white p-2 rounded-xl border border-purple-100 shadow-sm"
                 >
@@ -65,18 +65,17 @@ export const PromiseDay: React.FC<PromiseDayProps> = ({ onComplete }) => {
                 </motion.div>
               ))}
             </div>
-            
+
             <div className="mt-6 flex justify-center">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleLockPromises}
                 disabled={promises.every(p => p.trim() === '')}
-                className={`px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all ${
-                  promises.every(p => p.trim() === '') 
-                    ? 'bg-gray-300 cursor-not-allowed' 
+                className={`px-8 py-3 rounded-full font-bold text-white shadow-lg transition-all ${promises.every(p => p.trim() === '')
+                    ? 'bg-gray-300 cursor-not-allowed'
                     : 'bg-purple-600 hover:bg-purple-700 hover:shadow-purple-500/30'
-                }`}
+                  }`}
               >
                 Lock Promises 🔒
               </motion.button>
@@ -84,7 +83,7 @@ export const PromiseDay: React.FC<PromiseDayProps> = ({ onComplete }) => {
           </div>
         </motion.div>
       ) : (
-        <motion.div 
+        <motion.div
           className="w-full max-w-2xl flex flex-col gap-6 items-center"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -96,7 +95,7 @@ export const PromiseDay: React.FC<PromiseDayProps> = ({ onComplete }) => {
             </div>
 
             <div className="text-center mb-8">
-              <motion.div 
+              <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1, rotate: [0, -10, 10, 0] }}
                 transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
@@ -114,7 +113,7 @@ export const PromiseDay: React.FC<PromiseDayProps> = ({ onComplete }) => {
               {promises.map((promise, index) => {
                 if (promise.trim() === '') return null;
                 return (
-                  <motion.div 
+                  <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
