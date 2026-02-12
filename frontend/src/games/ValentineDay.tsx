@@ -2,38 +2,60 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Confetti from 'react-confetti';
 
-interface TeddyDayProps {
+interface ValentineDayProps {
   onComplete: () => void;
 }
 
 interface Card {
   id: string;
-  type: 'teddy' | 'photo';
-  index: number;
+  imagePath: string;
+  pairId: number;
   isFlipped: boolean;
   isMatched: boolean;
-  caption?: string;
 }
 
-export const ValentineDay: React.FC<TeddyDayProps> = ({ onComplete }) => {
-  const captions = ['This smile', 'That laugh', 'Forever'];
+export const ValentineDay: React.FC<ValentineDayProps> = ({ onComplete }) => {
+  // Image paths from the public folder
+  const images = [
+    '/1.JPG',
+    '/2.PNG',
+    '/3.PNG',
+    '/4.JPG'
+  ];
 
-  const initialCards: Card[] = [
-    { id: '0', type: 'teddy' as const, index: 0, isFlipped: false, isMatched: false },
-    { id: '1', type: 'photo' as const, index: 0, isFlipped: false, isMatched: false, caption: captions[0] },
-    { id: '2', type: 'teddy' as const, index: 1, isFlipped: false, isMatched: false },
-    { id: '3', type: 'photo' as const, index: 1, isFlipped: false, isMatched: false, caption: captions[1] },
-    { id: '4', type: 'teddy' as const, index: 2, isFlipped: false, isMatched: false },
-    { id: '5', type: 'photo' as const, index: 2, isFlipped: false, isMatched: false, caption: captions[2] },
-  ].sort(() => Math.random() - 0.5);
+  // Create pairs of cards (2 cards for each image)
+  const createInitialCards = (): Card[] => {
+    const cards: Card[] = [];
+    images.forEach((imagePath, index) => {
+      // First card of the pair
+      cards.push({
+        id: `${index}-a`,
+        imagePath,
+        pairId: index,
+        isFlipped: false,
+        isMatched: false
+      });
+      // Second card of the pair
+      cards.push({
+        id: `${index}-b`,
+        imagePath,
+        pairId: index,
+        isFlipped: false,
+        isMatched: false
+      });
+    });
+    // Shuffle the cards
+    return cards.sort(() => Math.random() - 0.5);
+  };
 
-  const [cards] = useState(initialCards);
+  const [cards] = useState(createInitialCards());
   const [flipped, setFlipped] = useState<string[]>([]);
   const [matched, setMatched] = useState<string[]>([]);
   const [isWon, setIsWon] = useState(false);
   const [showConfetti, setShowConfetti] = useState(false);
 
   const handleCardClick = (cardId: string) => {
+    // Prevent clicking if card is already flipped, matched, or two cards are already flipped
     if (flipped.includes(cardId) || matched.includes(cardId) || flipped.length === 2) return;
 
     const newFlipped = [...flipped, cardId];
@@ -43,69 +65,79 @@ export const ValentineDay: React.FC<TeddyDayProps> = ({ onComplete }) => {
       const card1 = cards.find((c: Card) => c.id === newFlipped[0])!;
       const card2 = cards.find((c: Card) => c.id === newFlipped[1])!;
 
-      if (card1.index === card2.index) {
-        // Match!
-        setMatched([...matched, newFlipped[0], newFlipped[1]]);
+      if (card1.pairId === card2.pairId) {
+        // Match found!
+        const newMatched = [...matched, newFlipped[0], newFlipped[1]];
+        setMatched(newMatched);
         setFlipped([]);
 
-        if (matched.length + 2 === cards.length) {
+        // Check if all cards are matched
+        if (newMatched.length === cards.length) {
           setIsWon(true);
           setShowConfetti(true);
           setTimeout(() => {
             onComplete();
-          }, 2000);
+          }, 3000);
         }
       } else {
-        // No match
-        setTimeout(() => setFlipped([]), 600);
+        // No match - flip back after delay
+        setTimeout(() => setFlipped([]), 800);
       }
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 p-8 min-h-screen">
+    <div className="flex flex-col items-center justify-center gap-8 p-8 min-h-screen bg-gradient-to-br from-pink-50 to-red-50">
       {showConfetti && <Confetti />}
 
-      <h2 className="text-3xl font-bold text-center">Match the Memories 🧸</h2>
+      <h2 className="text-4xl font-bold text-center text-pink-600">
+        Match the Memories 💕
+      </h2>
+      <p className="text-lg text-gray-600">Find all the matching pairs!</p>
 
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-4 gap-4 max-w-4xl">
         {cards.map((card: Card) => (
           <motion.button
             key={card.id}
             onClick={() => handleCardClick(card.id)}
-            className={`w-24 h-24 rounded-lg flex items-center justify-center text-4xl cursor-pointer transition-all ${
-              matched.includes(card.id) ? 'opacity-50' : ''
-            }`}
+            className={`relative w-32 h-32 rounded-xl overflow-hidden cursor-pointer transition-all ${matched.includes(card.id) ? 'opacity-60 cursor-not-allowed' : ''
+              }`}
             style={{
-              backgroundColor: flipped.includes(card.id)
-                ? card.type === 'teddy'
-                  ? '#D2B48C'
-                  : '#FFB6C1'
-                : '#E5D5C0',
-              boxShadow: flipped.includes(card.id) ? '0 0 15px rgba(210, 180, 140, 0.6)' : 'none',
+              backgroundColor: '#FFE5EC',
+              border: '3px solid #FFB6C1',
+              boxShadow: flipped.includes(card.id) || matched.includes(card.id)
+                ? '0 0 20px rgba(255, 182, 193, 0.8)'
+                : '0 4px 6px rgba(0, 0, 0, 0.1)',
             }}
-            whileHover={{ scale: 0.95 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: matched.includes(card.id) ? 1 : 1.05 }}
+            whileTap={{ scale: matched.includes(card.id) ? 1 : 0.95 }}
           >
             {flipped.includes(card.id) || matched.includes(card.id) ? (
-              <div className="text-center">
-                <div className="text-3xl">{card.type === 'teddy' ? '🧸' : '📷'}</div>
-                {card.caption && <p className="text-xs mt-1">{card.caption}</p>}
-              </div>
+              <img
+                src={card.imagePath}
+                alt="Memory"
+                className="w-full h-full object-cover"
+              />
             ) : (
-              <span className="text-3xl">?</span>
+              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-pink-200 to-red-200">
+                <span className="text-5xl">❤️</span>
+              </div>
             )}
           </motion.button>
         ))}
+      </div>
+
+      <div className="text-lg font-semibold text-gray-700">
+        Matches Found: {matched.length / 2} / {cards.length / 2}
       </div>
 
       {isWon && (
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="text-2xl font-bold text-amber-600 text-center"
+          className="text-3xl font-bold text-pink-600 text-center"
         >
-          ✨ All Memories Matched! ✨
+          ✨ All Memories Matched! You're Amazing! ✨
         </motion.div>
       )}
     </div>
